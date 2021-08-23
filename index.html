@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style type="text/css">
+    	.navbar{
+	             background: #354D62;
+             }
+        .input-group{
+        	border: 2px solid  #354D62;
+        }
+        ul,li{
+        	list-style:none;
+        	}
+.ajax-section .cities {
+  display: grid;
+  grid-gap: 32px 20px;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.ajax-section .city {
+  position: relative;
+  padding: 40px 10%;
+  border-radius: 20px;
+  background: var(--text_light);
+  color: var(--text_med);
+}
+    </style>
+</head>
+<body>
+    	   	<nav class="navbar navbar-expand-lg navbar-dark">
+  <div class="btn btn-outline-success"><a class="navbar-brand" href="#">Weather App</a></div>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+</nav>
+<!--end of navbar-->
+<div class="container-fluid">
+
+    <div class="input-group mt-5">
+    	 
+	     <input type="text" name=""class="form-control"placeholder="Enter city you want to kow"id="myInput">
+	     <div class="input-group-append">
+    	 	  <span class="input-group-text bg-primary text-white"><button class="btn btn-primary"id="btn">Submit</button></span>
+    	 </div>
+    </div>
+</div>
+  <section class="ajax-section">
+      <div class="container">
+         <ul class="cities"></ul>
+      </div>
+  </section>
+
+<script type="text/javascript">	       
+        var input=document.getElementById('myInput');
+        var btn =document.getElementById('btn');
+        const list = document.querySelector(".ajax-section .cities");
+
+        var inputValue;
+        const apiKey = "e5779e31d28cd4c785ec9865e1aa524e";
+        btn.addEventListener('click',function(event){
+        	  event.preventDefault();
+              inputValue=input.value;
+              const url = `https://api.openweathermap.org/data/2.5/weather?q=${inputValue}&appid=${apiKey}&units=metric`;
+              fetch(url)
+              .then(response=>response.json())
+              .then(data=>{
+              	const {name,sys,main,weather}=data;
+              	const icon = `https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/${
+              	  weather[0]["icon"] }.svg`;
+              	  const li=document.createElement('li');
+              	  li.classList.add("city");
+              	  const html=
+              	  `<div><h2 data-name="${name},${sys.country}">
+                            <span>${name}</span>
+                            <sup>${sys.country}</sup>
+              	  </h2>
+              	  <div class="city-temp">${Math.round(main.temp)}<sup>°C</sup></div>
+                  <figure>
+                       <img class="city-icon" src="${icon}" alt="${
+                        data.weather[0]["description"]}">
+                  <figcaption>${data.weather[0]["description"]}</figcaption>
+                  </figure></div>`;
+      li.innerHTML = html;
+      list.appendChild(li);
+    })
+
+        });
+
+</script>
+
+
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>
